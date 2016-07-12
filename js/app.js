@@ -1,13 +1,9 @@
-var body = document.body;
-var pagination = document.createElement("div");
-var ul = document.createElement("ul");
-var page = document.querySelector(".page");
-var links = [];
 var studentList = document.getElementsByClassName("student-item");
 var numOfPages = Math.ceil(studentList.length/10);
 var currentPage = 0;
 
 var createLinks = function(){
+    var links = [];
     for(var i = 0; i < numOfPages; i++) {
         var li = document.createElement("li");
         li.classList.add("pageLink");
@@ -16,18 +12,23 @@ var createLinks = function(){
         li.appendChild(anchor);
         links.push(li);
     }
+    return links;
 }
 
-var appendLinks = function() {
+var appendLinks = function(links) {
+    var ul = document.createElement("ul");
     for(var i = 0; i < numOfPages; i++){
         ul.appendChild(links[i]);
         ul.appendChild (document.createTextNode (" "));
     }
+    return ul;
 }
 
 var createPagination = function() {
-    createLinks();
-    appendLinks();
+    var pagination = document.createElement("div");
+    var page = document.querySelector(".page");
+    var links = createLinks();
+    var ul = appendLinks(links);
     pagination.appendChild(ul);
     pagination.classList.add("pagination");
     page.appendChild(pagination);
@@ -40,10 +41,9 @@ var paginationOnClick = function() {
         });
         $(this).children().first().addClass("active");
         currentPage = parseInt($(this).children().first().text());
-        $(".student-item").slice(0, (currentPage-1)*10).hide();
-        $(".student-item").slice(currentPage*10, numOfPages*10).hide();
-        $(".student-item").slice((currentPage-1)*10, currentPage*10).show();
-
+        $(studentList).slice(0, (currentPage-1)*10).hide();
+        $(studentList).slice(currentPage*10, numOfPages*10).hide();
+        $(studentList).slice((currentPage-1)*10, currentPage*10).show();
     });
 }
 
