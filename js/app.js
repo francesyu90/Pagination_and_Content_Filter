@@ -1,5 +1,6 @@
 var studentItems = document.getElementsByClassName("student-item");
 var defaultStudentItems = document.getElementsByClassName("student-item");
+var studentList = document.getElementsByClassName("student-list");
 var numOfPages = 0;
 var currentPage = 0;
 
@@ -47,6 +48,7 @@ var createPagination = function() {
 //  show students according to which pagination link is clicked
 var paginationOnClick = function() {
     $(".pageLink").on("click", function(event){
+        animatePage("fadeIn");
         $(this).siblings().children().each(function(){
             if($(this).first().hasClass("active")) $(this).first().removeClass("active");
         });
@@ -83,6 +85,7 @@ var searchBarOnClick = function() {
             currentPage = 0;
             studentItems = defaultStudentItems;
             resetstudentItems();
+            animatePage("fadeIn");
         } else {
             var matchedCount = 0;
             var list = [];
@@ -101,6 +104,40 @@ var searchBarOnClick = function() {
                 studentItems = list;
                 currentPage = 0;
                 resetstudentItems();
+            }else{
+                animatePage("zoomIn");
+            }
+        }
+    })  
+}
+
+var searchBarOnChange = function() {
+    $(".student-search input").on("input", function(){
+        var targetText = $(this).val().toLowerCase().trim();
+        $(".pagination").remove();
+        if(targetText === "") {
+            currentPage = 0;
+            studentItems = defaultStudentItems;
+            resetstudentItems();
+        } else {
+            var matchedCount = 0;
+            var list = [];
+            $(studentItems).each(function(){
+                if($(this).is(":contains('" + targetText + "')")){
+                    matchedCount++;
+                    list.push(this);
+                    $(this).show();
+                }else{
+                    $(this).hide();
+                }
+            });
+            if(matchedCount == 0){
+                alert("No results found!");
+                $(this).val("");
+            } else if (matchedCount >= 10){
+                studentItems = list;
+                currentPage = 0;
+                resetstudentItems();
             }
         }
     })  
@@ -115,11 +152,26 @@ var resetstudentItems = function(){
 var includeSearchBar = function(){
     createSearchBar();
     searchBarOnClick();
+    searchBarOnChange();
+}
+
+$.fn.extend({
+    animateCss: function (animationName) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        $(this).addClass('animated ' + animationName).one(animationEnd, function() {
+            $(this).removeClass('animated ' + animationName);
+        });
+    }
+});
+
+var animatePage = function(effect){
+    $(studentList).animateCss(effect);
 }
 
 $(document).ready(function(){
     resetstudentItems();
     includeSearchBar();
+
 });
 
 
