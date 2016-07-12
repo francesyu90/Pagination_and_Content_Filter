@@ -10,6 +10,7 @@ var currentPage = 0;
 var createLinks = function(){
     for(var i = 0; i < numOfPages; i++) {
         var li = document.createElement("li");
+        li.classList.add("pageLink");
         var anchor = document.createElement("a");
         anchor.innerHTML = i + 1;
         li.appendChild(anchor);
@@ -30,13 +31,27 @@ var createPagination = function() {
     pagination.appendChild(ul);
     pagination.classList.add("pagination");
     page.appendChild(pagination);
-    var li = $(".pagination li")[currentPage];
-    var anchor = $(li).children()[0];
-    anchor.classList.add("active");
+}
+
+var paginationOnClick = function() {
+    $(".pageLink").on("click", function(event){
+        $(this).siblings().children().each(function(){
+            if($(this).first().hasClass("active")) $(this).first().removeClass("active");
+        });
+        $(this).children().first().addClass("active");
+        currentPage = parseInt($(this).children().first().text());
+        $(".student-item").slice(0, (currentPage-1)*10).hide();
+        $(".student-item").slice(currentPage*10, numOfPages*10).hide();
+        $(".student-item").slice((currentPage-1)*10, currentPage*10).show();
+
+    });
 }
 
 $(document).ready(function(){
     createPagination();
+    paginationOnClick();
+    $(".pageLink")[currentPage].click();
 });
+
 
 
