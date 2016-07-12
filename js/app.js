@@ -47,8 +47,23 @@ var paginationOnClick = function() {
     });
 }
 
+var createSearchBar = function() {
+    var pageHeader = $(".page-header");
+    var searchBar = document.createElement("div");
+    searchBar.classList.add("student-search");
+    var searchField = document.createElement("input");
+    $(searchField).attr("placeholder", "Search for students...");
+    var searchButton = document.createElement("button");
+    searchButton.innerHTML = "Search";
+    searchBar.appendChild(searchField);
+    searchBar.appendChild (document.createTextNode (" "));
+    searchBar.appendChild(searchButton);
+    pageHeader.append(searchBar);
+}
+
 $(document).ready(function(){
     createPagination();
+    createSearchBar();
     paginationOnClick();
     $(".pageLink")[currentPage].click();
 });
