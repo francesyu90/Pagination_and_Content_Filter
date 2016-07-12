@@ -78,6 +78,7 @@ var searchBarOnClick = function() {
     $(".student-search button").on("click", function(){
         var targetText = $(this).prev().val().toLowerCase().trim();
         $(this).prev().val("");
+        $(".pagination").remove();
         if(targetText === "") {
             currentPage = 0;
             studentItems = defaultStudentItems;
@@ -94,7 +95,6 @@ var searchBarOnClick = function() {
                     $(this).hide();
                 }
             });
-            $(".pagination").remove();
             if(matchedCount == 0){
                 alert("No results found!");
             } else if (matchedCount >= 10){
